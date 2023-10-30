@@ -6,12 +6,12 @@
       d: 100.0
       i_clamp: 10
     shoulder_lift_joint:
-      p: 10000
+      p: 1000
       i: 10
       d: 100.0
       i_clamp: 100
     elbow_joint:
-      p: 10000
+      p: 1000
       i: 10
       d: 50.0
       i_clamp: 100
@@ -24,7 +24,7 @@
       p: 1000.0
       i: 0.7
       d: 25.0
-      i_clamp: 5
+      i_clamp: 5 
     wrist_3_joint:
       p: 1000.0
       i: 0.7

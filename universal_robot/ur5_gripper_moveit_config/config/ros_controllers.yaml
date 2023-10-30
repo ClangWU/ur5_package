@@ -41,7 +41,7 @@ controller_list:
     joints:
       - robotiq_85_left_knuckle_joint
 ur5_arm_controller:
-  type: effort_controllers/JointTrajectoryController
+  type: position_controllers/JointTrajectoryController
   joints:
     - shoulder_pan_joint
     - shoulder_lift_joint
@@ -81,7 +81,7 @@ ur5_arm_controller:
       i: 0.1
       i_clamp: 100
 gripper_controller:
-  type: effort_controllers/JointTrajectoryController
+  type: position_controllers/JointTrajectoryController
   joints:
     - robotiq_85_left_knuckle_joint
   gains:
