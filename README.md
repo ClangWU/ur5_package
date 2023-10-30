@@ -16,3 +16,5 @@ UR5 + Robotiq85 gripper Moveit! &amp; Gazebo packge
 `roslaunch ur5_gripper_moveit_config demo_gazebo.launch`
 
 **3 -** You can change the initial pose for the UR5 by revising the demo_gazebo.launch.
+
+**Please** just ignore the error: `No p gain specified for pid.  Namespace:/***`
