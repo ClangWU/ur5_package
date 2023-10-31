@@ -7,7 +7,7 @@ UR5 + Robotiq85 gripper Moveit! &amp; Gazebo packge
 
 `git clone https://github.com/ClangWU/ur5_package.git`
 
-`cd .. & catkin_make`
+`cd .. && catkin_make`
 
 **2 -** Run this command to launch moveit & gazebo. 
 
