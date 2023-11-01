@@ -32,6 +32,15 @@
       </inertial>
     </link>
 
+    <!-- Define the hand_tcp frame -->
+    <link name="${prefix}ur5_gripper_tcp" />
+
+    <joint name="${prefix}ur5_gripper_tcp_joint" type="fixed">
+      <origin xyz="0.15 0 0.0" rpy="0 0 0" />
+      <parent link="${prefix}robotiq_85_base_link"/>
+      <child link="${prefix}ur5_gripper_tcp"/>
+    </joint>
+
     <joint name="${prefix}robotiq_85_left_knuckle_joint" type="revolute">
       <parent link="${prefix}robotiq_85_base_link"/>
       <child link="${prefix}robotiq_85_left_knuckle_link"/>
