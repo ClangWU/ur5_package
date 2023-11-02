@@ -1,38 +1,41 @@
-<?xml version="1.0"?>
-<package format="2">
+<package>
+
   <name>ur5_robotiq85_moveit_config</name>
-  <version>0.0.0</version>
-  <description>The ur5_robotiq85_moveit_config package</description>
+  <version>0.3.0</version>
+  <description>
+     An automatically generated package with all the configuration and launch files for using the ur5 with the MoveIt Motion Planning Framework
+  </description>
+  <author email="clangwu@163.com">clangwu</author>
+  <maintainer email="clangwu@163.com">clangwu</maintainer>
 
-  <!-- One maintainer tag required, multiple allowed, one person per tag -->
-  <!-- Example:  -->
-  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="sgt79911030@gmail.com">Junting Chen</maintainer>
+  <license>BSD</license>
 
+  <url type="website">http://moveit.ros.org/</url>
+  <url type="bugtracker">https://github.com/ros-planning/moveit/issues</url>
+  <url type="repository">https://github.com/ros-planning/moveit</url>
 
-  <!-- One license tag required, multiple allowed, one license per tag -->
-  <!-- Commonly used license strings: -->
-  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>TODO</license>
-
-
-  <!-- The *depend tags are used to specify dependencies -->
-  <!-- Dependencies can be catkin packages or system dependencies -->
-  <!-- Examples: -->
-  <!-- Use depend as a shortcut for packages that are both build and exec dependencies -->
-  
   <buildtool_depend>catkin</buildtool_depend>
-  <exec_depend>robotiq_desciption</exec_depend>
-  <exec_depend>robotiq_gazebo</exec_depend>
-  <exec_depend>ur5_description</exec_depend>
-  <exec_depend>ur5_gazebo</exec_depend>
-  <exec_depend>ur5_gripper_moveit_config</exec_depend>
+
+  <run_depend>moveit_ros_move_group</run_depend>
+  <run_depend>moveit_fake_controller_manager</run_depend>
+  <run_depend>moveit_kinematics</run_depend>
+  <run_depend>moveit_planners</run_depend>
+  <run_depend>moveit_ros_visualization</run_depend>
+  <run_depend>moveit_setup_assistant</run_depend>
+  <run_depend>moveit_simple_controller_manager</run_depend>
+  <run_depend>joint_state_publisher</run_depend>
+  <run_depend>joint_state_publisher_gui</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>rviz</run_depend>
+  <run_depend>tf2_ros</run_depend>
+  <run_depend>xacro</run_depend>
+  <!-- The next 2 packages are required for the gazebo simulation.
+       We don't include them by default to prevent installing gazebo and all its dependencies. -->
+  <!-- <run_depend>joint_trajectory_controller</run_depend> -->
+  <!-- <run_depend>gazebo_ros_control</run_depend> -->
+  <!-- This package is referenced in the warehouse launch files, but does not build out of the box at the moment. Commented the dependency until this works. -->
+  <!-- <run_depend>warehouse_ros_mongo</run_depend> -->
+  <run_depend>ur_description</run_depend>
 
 
-
-  <!-- The export tag contains other, unspecified, tags -->
-  <export>
-    <!-- Other tools can request additional information be placed here -->
-
-  </export>
 </package>
