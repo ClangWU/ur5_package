@@ -8,6 +8,7 @@ from geometry_msgs.msg import Pose
 import actionlib
 import control_msgs.msg
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from geometry_msgs.msg import PoseStamped
 
 # Workaround to use the gripper action client with unified gripper interface
 class GripperCommanderGroup:
@@ -33,7 +34,7 @@ class GripperCommanderGroup:
     def open_gripper(self, value=0.08):
         self.set_gripper(value)
 
-    def close_gripper(self, value=0.0):
+    def close_gripper(self, value=0.01):
         self.set_gripper(value)
 
     def set_gripper(self, value):
@@ -52,6 +53,21 @@ class GripperCommanderGroup:
         self.action_gripper.wait_for_result(rospy.Duration(10))
         return self.action_gripper.get_result()
 
+def all_close(goal, actual, tolerance=0.01):
+    """
+    Convenience method for testing if the values in two lists are within a tolerance range of each other.
+    :param: goal: A list of floats, the length of the list must match that of actual.
+    :param: actual: A list of floats, the length of the list must match that of goal.
+    :param: tolerance: A float, tolerance for equality testing.
+    :returns: bool
+    """
+    all_equal = True
+    for index in range(len(goal)):
+        if abs(actual[index] - goal[index]) > tolerance:
+            return False
+
+    return True
+
 def main():
     moveit_commander.roscpp_initialize(sys.argv)
     rospy.init_node('ur5_moveit_script', anonymous=True)
@@ -65,7 +81,7 @@ def main():
     move_group_arm = moveit_commander.MoveGroupCommander(group_name_arm)
     move_group_gripper = moveit_commander.MoveGroupCommander(group_name_gripper)
     move_group_manipulator = moveit_commander.MoveGroupCommander(group_name_manipulator)
-
+    GripperCommander = GripperCommanderGroup()
     display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',moveit_msgs.msg.DisplayTrajectory)
 
 
@@ -74,39 +90,69 @@ def main():
     rospy.loginfo("Robot Groups: %s" % robot.get_group_names())
     rospy.loginfo("Robot State:")
     rospy.loginfo(robot.get_current_state())
+    # Get the current pose
+    current_pose_stamped = move_group_manipulator.get_current_pose()
+    current_pose = current_pose_stamped.pose
+    move_group_manipulator.set_start_state_to_current_state()
+    move_group_manipulator.clear_pose_targets()
+    # Log the current pose
+    rospy.loginfo("Current Pose: %s" % current_pose)
 
-    GripperCommander = GripperCommanderGroup()
-    # Planning to a Pose goal
-    pose_goal = Pose()
-    pose_goal.position.x = 0.0
-    pose_goal.position.y = 0.3
-    pose_goal.position.z = 0.6
-    pose_goal.orientation.w = 1.0
-    pose_goal.orientation.x = 0
-    pose_goal.orientation.y = 0
-    pose_goal.orientation.z = 0
+    # Define a new pose goal
+    pose_goal = PoseStamped()
+    pose_goal.header.frame_id = move_group_manipulator.get_planning_frame()
+    pose_goal.pose.position.x = current_pose.position.x
+    pose_goal.pose.position.y = current_pose.position.y
+    pose_goal.pose.position.z = current_pose.position.z - 0.35  # Move up by 5 cm
+    pose_goal.pose.orientation = current_pose.orientation
 
+    # Now, you can set this new pose as the goal
     move_group_manipulator.set_pose_target(pose_goal)
 
+    # Proceed with planning and moving as before
     rospy.loginfo("Planning to move to pose goal")
-    plan = move_group_manipulator.go(wait=True)
-    move_group_manipulator.stop()
+# Plan and execute the trajectory
+    success = move_group_manipulator.go(wait=True)
+    move_group_manipulator.stop()  # Ensure that there is no residual movement
     move_group_manipulator.clear_pose_targets()
 
-    if plan:
-        rospy.loginfo("Motion to pose goal succeeded!")
+    if success:
+        rospy.loginfo("Movement successful.")
+        current_pose = move_group_manipulator.get_current_pose().pose
+        if all_close(pose_goal, current_pose, 0.01):
+            rospy.loginfo("End effector is at the target pose.")
+        else:
+            rospy.logwarn("End effector is not at the target pose.")
     else:
-        rospy.loginfo("Motion to pose goal failed.")
+        rospy.logerr("Movement failed.")
 
     # Moving the gripper
-    rospy.loginfo("Closing the gripper")
-    GripperCommander.close_gripper()
+    rospy.sleep(2)
     rospy.loginfo("Opening the gripper")
     GripperCommander.open_gripper()
-    # Moving the gripper
+    # # Moving the gripper
     rospy.loginfo("Closing the gripper")
     GripperCommander.close_gripper()
-    rospy.loginfo("Opening the gripper")
+    # rospy.loginfo("Opening the gripper")
+    # GripperCommander.open_gripper()
+
+    pose_goal.pose.position.z += 0.38
+    move_group_manipulator.set_pose_target(pose_goal)
+    rospy.loginfo("Planning to move to pose goal")
+    success = move_group_manipulator.go(wait=True)
+    move_group_manipulator.stop()  # Ensure that there is no residual movement
+    move_group_manipulator.clear_pose_targets()
+
+    if success:
+        rospy.loginfo("Movement successful.")
+        current_pose = move_group_manipulator.get_current_pose().pose
+        if all_close(pose_goal, current_pose, 0.01):
+            rospy.loginfo("End effector is at the target pose.")
+        else:
+            rospy.logwarn("End effector is not at the target pose.")
+    else:
+        rospy.logerr("Movement failed.")
+
     GripperCommander.open_gripper()
 
 if __name__ == '__main__':
