@@ -42,7 +42,7 @@ class GripperCommanderGroup:
         # Create a trajectory point
         trajectory_point = JointTrajectoryPoint()
         trajectory_point.positions = [(0.08 - value)*10]  # Set the gripper position
-        trajectory_point.time_from_start = rospy.Duration(3)  # Move to the position in 3 seconds
+        trajectory_point.time_from_start = rospy.Duration(5)  # Move to the position in 3 seconds
 
         trajectory = JointTrajectory()
         trajectory.joint_names = ["robotiq_85_left_knuckle_joint"]  # This should be the name of your gripper joint
@@ -82,8 +82,6 @@ def main():
     move_group_gripper = moveit_commander.MoveGroupCommander(group_name_gripper)
     move_group_manipulator = moveit_commander.MoveGroupCommander(group_name_manipulator)
     GripperCommander = GripperCommanderGroup()
-    display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',moveit_msgs.msg.DisplayTrajectory)
-
 
     rospy.loginfo("Planning frame: %s" % move_group_manipulator.get_planning_frame())
     rospy.loginfo("End effector link: %s" % move_group_manipulator.get_end_effector_link())
@@ -91,6 +89,49 @@ def main():
     rospy.loginfo("Robot State:")
     rospy.loginfo(robot.get_current_state())
     # Get the current pose
+    # current_pose_stamped = move_group_manipulator.get_current_pose()
+    # current_pose = current_pose_stamped.pose
+    # move_group_manipulator.set_start_state_to_current_state()
+    # move_group_manipulator.clear_pose_targets()
+    # # Log the current pose
+    # rospy.loginfo("Current Pose: %s" % current_pose)
+
+    # # Define a new pose goal
+    # pose_goal = PoseStamped()
+    # pose_goal.header.frame_id = move_group_manipulator.get_planning_frame()
+    # pose_goal.pose.position.x = current_pose.position.x
+    # pose_goal.pose.position.y = current_pose.position.y
+    # pose_goal.pose.position.z = current_pose.position.z - 0.35  # Move up by 5 cm
+    # pose_goal.pose.orientation = current_pose.orientation
+
+    # # Now, you can set this new pose as the goal
+    # move_group_manipulator.set_pose_target(pose_goal)
+
+    # Proceed with planning and moving as before
+#     rospy.loginfo("Planning to move to pose goal")
+# # Plan and execute the trajectory
+#     success = move_group_manipulator.go(wait=True)
+#     move_group_manipulator.stop()  # Ensure that there is no residual movement
+#     move_group_manipulator.clear_pose_targets()
+
+    # if success:
+    #     rospy.loginfo("Movement successful.")
+    #     current_pose = move_group_manipulator.get_current_pose().pose
+    #     if all_close(pose_goal, current_pose, 0.01):
+    #         rospy.loginfo("End effector is at the target pose.")
+    #     else:
+    #         rospy.logwarn("End effector is not at the target pose.")
+    # else:
+    #     rospy.logerr("Movement failed.")
+
+    # Moving the gripper
+    rospy.sleep(2)
+    rospy.loginfo("Opening the gripper")
+    GripperCommander.open_gripper()
+    # # Moving the gripper
+    rospy.loginfo("Closing the gripper")
+    GripperCommander.close_gripper()
+
     current_pose_stamped = move_group_manipulator.get_current_pose()
     current_pose = current_pose_stamped.pose
     move_group_manipulator.set_start_state_to_current_state()
@@ -101,58 +142,22 @@ def main():
     # Define a new pose goal
     pose_goal = PoseStamped()
     pose_goal.header.frame_id = move_group_manipulator.get_planning_frame()
-    pose_goal.pose.position.x = current_pose.position.x
+    pose_goal.pose.position.x = current_pose.position.x + 0.20
     pose_goal.pose.position.y = current_pose.position.y
-    pose_goal.pose.position.z = current_pose.position.z - 0.35  # Move up by 5 cm
+    pose_goal.pose.position.z = current_pose.position.z + 0.20  # Move up by 5 cm
     pose_goal.pose.orientation = current_pose.orientation
 
     # Now, you can set this new pose as the goal
     move_group_manipulator.set_pose_target(pose_goal)
 
     # Proceed with planning and moving as before
-    rospy.loginfo("Planning to move to pose goal")
 # Plan and execute the trajectory
     success = move_group_manipulator.go(wait=True)
     move_group_manipulator.stop()  # Ensure that there is no residual movement
     move_group_manipulator.clear_pose_targets()
 
-    if success:
-        rospy.loginfo("Movement successful.")
-        current_pose = move_group_manipulator.get_current_pose().pose
-        if all_close(pose_goal, current_pose, 0.01):
-            rospy.loginfo("End effector is at the target pose.")
-        else:
-            rospy.logwarn("End effector is not at the target pose.")
-    else:
-        rospy.logerr("Movement failed.")
-
     # Moving the gripper
     rospy.sleep(2)
-    rospy.loginfo("Opening the gripper")
-    GripperCommander.open_gripper()
-    # # Moving the gripper
-    rospy.loginfo("Closing the gripper")
-    GripperCommander.close_gripper()
-    # rospy.loginfo("Opening the gripper")
-    # GripperCommander.open_gripper()
-
-    pose_goal.pose.position.z += 0.38
-    move_group_manipulator.set_pose_target(pose_goal)
-    rospy.loginfo("Planning to move to pose goal")
-    success = move_group_manipulator.go(wait=True)
-    move_group_manipulator.stop()  # Ensure that there is no residual movement
-    move_group_manipulator.clear_pose_targets()
-
-    if success:
-        rospy.loginfo("Movement successful.")
-        current_pose = move_group_manipulator.get_current_pose().pose
-        if all_close(pose_goal, current_pose, 0.01):
-            rospy.loginfo("End effector is at the target pose.")
-        else:
-            rospy.logwarn("End effector is not at the target pose.")
-    else:
-        rospy.logerr("Movement failed.")
-
     GripperCommander.open_gripper()
 
 if __name__ == '__main__':

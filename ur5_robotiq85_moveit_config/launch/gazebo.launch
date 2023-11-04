@@ -1,13 +1,5 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="robotiq_85_left_knuckle_joint" default="0.1"/>
-  <arg name="shoulder_lift_joint" default="-1.5447"/>
-  <arg name="shoulder_pan_joint" default="-1.5447"/>
-  <arg name="elbow_joint" default="-1.5447"/>
-  <arg name="wrist_1_joint" default="-1.5794"/>
-  <arg name="wrist_2_joint" default="+1.5794"/>
-  <arg name="wrist_3_joint" default="+1.5794"/>
-
   <!-- Gazebo options -->
   <arg name="gazebo_gui" default="true" doc="Start Gazebo GUI"/>
   <arg name="paused" default="false" doc="Start Gazebo paused"/>
@@ -47,9 +39,9 @@
   <include file="$(dirname)/ros_controllers.launch"/>
 
   <!-- Spawn the Gazebo ROS controllers -->
-  <node name="gazebo_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller" />
+  <!-- <node name="gazebo_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller" /> -->
 
   <!-- Given the published joint states, publish tf for the robot links -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" respawn="true" output="screen" />
+  <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" respawn="true" output="screen" /> -->
 </launch>
