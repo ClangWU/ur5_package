@@ -299,7 +299,7 @@
               <gripper_link>robotiq_85_right_inner_knuckle_link</gripper_link> -->
             </arm>
             <forces_angle_tolerance>90</forces_angle_tolerance>
-            <update_rate>150</update_rate>
+            <update_rate>100</update_rate>
             <grip_count_threshold>1</grip_count_threshold>
             <max_grip_count>5</max_grip_count>
             <release_tolerance>0.01</release_tolerance>

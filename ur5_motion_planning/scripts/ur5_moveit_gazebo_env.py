@@ -42,7 +42,7 @@ class GripperCommanderGroup:
         # Create a trajectory point
         trajectory_point = JointTrajectoryPoint()
         trajectory_point.positions = [(0.08 - value)*10]  # Set the gripper position
-        trajectory_point.time_from_start = rospy.Duration(1)  # Move to the position in 3 seconds
+        trajectory_point.time_from_start = rospy.Duration(2)  # Move to the position in 3 seconds
 
         trajectory = JointTrajectory()
         trajectory.joint_names = ["robotiq_85_left_knuckle_joint"]  # This should be the name of your gripper joint
