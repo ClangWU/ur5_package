@@ -286,19 +286,23 @@
         <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
             <arm>
               <arm_name>ur5_arm</arm_name>
+              <palm_link>wrist_3_link</palm_link>
+              <palm_link>robotiq_85_right_knuckle_link</palm_link>
+              <palm_link>robotiq_85_left_knuckle_link</palm_link>
+              <palm_link>robotiq_85_left_inner_knuckle_link</palm_link>
+              <palm_link>robotiq_85_right_inner_knuckle_link</palm_link>
               <gripper_link>robotiq_85_left_finger_tip_link</gripper_link>
               <gripper_link>robotiq_85_right_finger_tip_link</gripper_link>
-              <gripper_link>robotiq_85_left_knuckle_link</gripper_link>
+              <!-- <gripper_link>robotiq_85_left_knuckle_link</gripper_link>
               <gripper_link>robotiq_85_right_knuckle_link</gripper_link>
               <gripper_link>robotiq_85_left_inner_knuckle_link</gripper_link>
-              <gripper_link>robotiq_85_right_inner_knuckle_link</gripper_link>
-              <palm_link>wrist_3_link</palm_link>
+              <gripper_link>robotiq_85_right_inner_knuckle_link</gripper_link> -->
             </arm>
             <forces_angle_tolerance>90</forces_angle_tolerance>
             <update_rate>150</update_rate>
             <grip_count_threshold>1</grip_count_threshold>
             <max_grip_count>5</max_grip_count>
-            <release_tolerance>0.005</release_tolerance>
+            <release_tolerance>0.01</release_tolerance>
             <disable_collisions_on_attach>true</disable_collisions_on_attach>
             <contact_topic>__default_topic__</contact_topic>
         </plugin>

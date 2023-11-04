@@ -34,7 +34,7 @@ class GripperCommanderGroup:
     def open_gripper(self, value=0.08):
         self.set_gripper(value)
 
-    def close_gripper(self, value=0.01):
+    def close_gripper(self, value=0.03):
         self.set_gripper(value)
 
     def set_gripper(self, value):
@@ -42,7 +42,7 @@ class GripperCommanderGroup:
         # Create a trajectory point
         trajectory_point = JointTrajectoryPoint()
         trajectory_point.positions = [(0.08 - value)*10]  # Set the gripper position
-        trajectory_point.time_from_start = rospy.Duration(5)  # Move to the position in 3 seconds
+        trajectory_point.time_from_start = rospy.Duration(1)  # Move to the position in 3 seconds
 
         trajectory = JointTrajectory()
         trajectory.joint_names = ["robotiq_85_left_knuckle_joint"]  # This should be the name of your gripper joint
@@ -125,10 +125,7 @@ def main():
     #     rospy.logerr("Movement failed.")
 
     # Moving the gripper
-    rospy.sleep(2)
-    rospy.loginfo("Opening the gripper")
-    GripperCommander.open_gripper()
-    # # Moving the gripper
+
     rospy.loginfo("Closing the gripper")
     GripperCommander.close_gripper()
 
@@ -142,9 +139,9 @@ def main():
     # Define a new pose goal
     pose_goal = PoseStamped()
     pose_goal.header.frame_id = move_group_manipulator.get_planning_frame()
-    pose_goal.pose.position.x = current_pose.position.x + 0.20
+    pose_goal.pose.position.x = current_pose.position.x 
     pose_goal.pose.position.y = current_pose.position.y
-    pose_goal.pose.position.z = current_pose.position.z + 0.20  # Move up by 5 cm
+    pose_goal.pose.position.z = current_pose.position.z + 0.10 # Move up by 5 cm
     pose_goal.pose.orientation = current_pose.orientation
 
     # Now, you can set this new pose as the goal
