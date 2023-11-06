@@ -13,7 +13,13 @@ UR5 + Robotiq85 gripper Moveit! &amp; Gazebo packge
 
 `source devel/setup.bash`
 
-`roslaunch ur5_gripper_moveit_config demo_gazebo.launch`
+`roslaunch ur5_robotiq85_moveit_config demo_gazebo.launch`
+
+DIY the scene by yourself( add some objects, desk and so on ), 
+
+then change the file `ur5_motion_planning/scripts/ur5_moveit_gazebo_env.py` for your need. Then run the file:
+
+`rosrun ur5_motion_planning ur5_moveit_gazebo_env.py`
 
 **3 -** You can change the initial pose for the UR5 by revising the demo_gazebo.launch.
 
