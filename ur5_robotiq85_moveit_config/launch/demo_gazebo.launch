@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
+  <!-- home position -->
   <arg name="robotiq_85_left_knuckle_joint" default="0.1"/>
   <arg name="shoulder_lift_joint" default="-1.5447"/>
   <arg name="shoulder_pan_joint" default="-1.5447"/>
