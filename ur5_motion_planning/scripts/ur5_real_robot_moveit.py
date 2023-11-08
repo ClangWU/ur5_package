@@ -20,7 +20,7 @@ class UR5Controller:
         # IP 地址
         
         self.robot = None
-        self.robot_ip = robot_ip
+        self.robot_ip = "192.168.1.1"
         try:
             self.robot = urx.Robot(self.robot_ip)
         except Exception as e:
@@ -32,15 +32,26 @@ class UR5Controller:
         self.robot.movej(home_position, acc=0.1, vel=0.1, wait=True)
 
         self.gripper = Robotiq_Two_Finger_Gripper(self.robot)
+        # sub joint_states
+        self.joint_states_sub = rospy.Subscriber('joint_states', JointState, self.joint_states_recv_callback)
+        self.gripper_states_sub = rospy.Subscriber('gripper_states', String, self.gripper_states_recv_callback)
 
         rospy.loginfo("UR5 Controller initialized")
 
-    
+    def joint_states_recv_callback(self, msg):
+        rospy.loginfo("Current Joint States: %s", msg.position)
+        if len(msg.position) >= 6:
+            try:
+                self.robot.movej(msg.position[:6], acc=0.1, vel=0.1, wait=False)
+            except Exception as e:
+                rospy.logerr("Failed to move UR5: %s", str(e))
 
-    def open_gripper(self):
+    def gripper_states_recv_callback(self, msg):
+        if msg.data == "open":
+          rospy.loginfo("Opening gripper")
           self.gripper.open_gripper()
-
-    def close_gripper(self):
+        elif msg.data == "close":
+          rospy.loginfo("Closing gripper")
           self.gripper.close_gripper()
 
     def shutdown(self):
@@ -51,8 +62,6 @@ def main():
     args = parse_arguments()
     rospy.init_node('ur5_real_robot', anonymous=True)
     ur5_controller = UR5Controller(robot_ip=args.robot_ip)
-
-
     rospy.on_shutdown(ur5_controller.shutdown)  
     rospy.spin()  
 
